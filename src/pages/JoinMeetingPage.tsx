@@ -1,5 +1,5 @@
 // src/pages/JoinMeetingPage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { KeyRound, User } from 'lucide-react';
 import StatusBar from '../components/StatusBar';
 import { useMeeting } from '../contexts/MeetingContext';
@@ -7,14 +7,25 @@ import { Alert, AlertTitle, AlertDescription } from '../components/ui/alert';
 
 interface JoinMeetingPageProps {
   onJoin: (name: string, code: string) => void;
+  initialCode?: string;
 }
 
-const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin }) => {
+const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }) => {
   const [name, setName] = useState('');
-  const [code, setCode] = useState('');
+  const [code, setCode] = useState(initialCode || '');
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
   const { joinRoom } = useMeeting();
+
+  useEffect(() => {
+    if (initialCode) {
+      // If we have an initial code, focus the name input
+      const nameInput = document.getElementById('name-input');
+      if (nameInput) {
+        nameInput.focus();
+      }
+    }
+  }, [initialCode]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +71,7 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin }) => {
                     <User className="w-5 h-5 text-white/40" />
                   </div>
                   <input
+                    id="name-input"
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -87,7 +99,7 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin }) => {
                     placeholder="Enter meeting code"
                     maxLength={6}
                     required
-                    disabled={isJoining}
+                    disabled={isJoining || !!initialCode}
                   />
                 </div>
               </div>

@@ -1,5 +1,5 @@
 // src/App.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MainPage from './pages/MainPage';
 import JoinMeetingPage from './pages/JoinMeetingPage';
 import VisionMeetingRoom from './components/VisionMeetingRoom';
@@ -9,6 +9,19 @@ import { MeetingProvider } from './contexts/MeetingContext';
 function App() {
   const [currentView, setCurrentView] = useState<'main' | 'create' | 'join' | 'room'>('main');
   const [joinDetails, setJoinDetails] = useState<{ name: string; code: string } | null>(null);
+
+  useEffect(() => {
+    // Check if we're accessing a join link
+    const path = window.location.pathname;
+    const joinMatch = path.match(/^\/join\/([A-Z0-9]+)$/);
+    if (joinMatch) {
+      const code = joinMatch[1];
+      setJoinDetails({ name: '', code }); // Name will be set in JoinMeetingPage
+      setCurrentView('join');
+      // Update the URL to remove the join path
+      window.history.replaceState({}, '', '/');
+    }
+  }, []);
 
   const handleCreateMeeting = () => {
     setCurrentView('create');
@@ -43,15 +56,18 @@ function App() {
 
         {currentView === 'main' && (
           <MainPage
-            onCreateMeeting={() => setCurrentView('create')}
-            onJoinMeeting={() => setCurrentView('join')}
+            onCreateMeeting={handleCreateMeeting}
+            onJoinMeeting={handleJoinMeeting}
           />
         )}
         {currentView === 'create' && (
           <VisionMeetingRoom onStart={() => setCurrentView('room')} />
         )}
         {currentView === 'join' && (
-          <JoinMeetingPage onJoin={handleJoinSubmit} />
+          <JoinMeetingPage 
+            onJoin={handleJoinSubmit}
+            initialCode={joinDetails?.code}
+          />
         )}
         {currentView === 'room' && (
           <MeetingRoom onLeave={handleMeetingEnd} />
