@@ -1,3 +1,4 @@
+// MainPage.tsx
 import React from 'react';
 import { Video, Users } from 'lucide-react';
 import StatusBar from '../components/StatusBar';
@@ -15,9 +16,9 @@ const MainPage: React.FC<MainPageProps> = ({ onCreateMeeting, onJoinMeeting }) =
         <div className="absolute -inset-x-40 -top-40 h-[500px] bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-teal-500/20 blur-3xl opacity-50 animate-pulse" />
       </div>
 
-      <div className="relative w-full max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12">
-        <StatusBar />
-        
+      <StatusBar />
+      
+      <div className="relative w-full max-w-7xl mx-auto px-4 md:px-8 pt-20">
         <div className="relative text-center mb-8 md:mb-16 mt-8">
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">Vision Meeting Space</h1>
           <p className="text-white/60 text-base md:text-lg">Connect with others in an immersive virtual environment</p>

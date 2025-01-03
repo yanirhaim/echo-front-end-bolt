@@ -1,39 +1,39 @@
-// src/pages/JoinMeetingPage.tsx
+// JoinMeetingPage.tsx
 import React, { useState, useEffect } from 'react';
 import { KeyRound, User } from 'lucide-react';
 import StatusBar from '../components/StatusBar';
 import { useMeeting } from '../contexts/MeetingContext';
 import { Alert, AlertTitle, AlertDescription } from '../components/ui/alert';
 
+// JoinMeetingPage.tsx (continued)
 interface JoinMeetingPageProps {
   onJoin: (name: string, code: string) => void;
   initialCode?: string;
-}
-
-const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }) => {
+ }
+ 
+ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }) => {
   const [name, setName] = useState('');
   const [code, setCode] = useState(initialCode || '');
   const [error, setError] = useState<string | null>(null);
   const [isJoining, setIsJoining] = useState(false);
   const { joinRoom } = useMeeting();
-
+ 
   useEffect(() => {
     if (initialCode) {
-      // If we have an initial code, focus the name input
       const nameInput = document.getElementById('name-input');
       if (nameInput) {
         nameInput.focus();
       }
     }
   }, [initialCode]);
-
+ 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !code) return;
-
+ 
     setIsJoining(true);
     setError(null);
-
+ 
     try {
       await joinRoom(name, code.toUpperCase());
       onJoin(name, code.toUpperCase());
@@ -43,15 +43,12 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }
       setIsJoining(false);
     }
   };
-
+ 
   return (
-    <div className="min-h-screen bg-[#000000] bg-opacity-95 p-8 flex items-center justify-center overflow-hidden">
-      <div className="relative w-full max-w-7xl">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-blue-500/10 blur-3xl" />
-        <div className="absolute -inset-x-40 -top-40 h-[500px] bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-teal-500/20 blur-3xl opacity-50 animate-pulse" />
-        
-        <StatusBar />
-        
+    <div className="min-h-screen bg-[#000000] bg-opacity-95">
+      <StatusBar />
+      
+      <div className="relative w-full max-w-7xl mx-auto px-4 md:px-8 pt-20">
         <div className="relative max-w-md mx-auto">
           {error && (
             <Alert variant="destructive" className="mb-4">
@@ -59,7 +56,7 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
-
+ 
           <div className="rounded-3xl p-8 bg-white/5 backdrop-blur-xl border border-white/10">
             <h2 className="text-2xl font-medium text-white mb-6 text-center">Join Meeting</h2>
             
@@ -83,7 +80,7 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }
                   />
                 </div>
               </div>
-
+ 
               <div>
                 <label className="block text-white/60 text-sm mb-2">Meeting Code</label>
                 <div className="relative">
@@ -103,7 +100,7 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }
                   />
                 </div>
               </div>
-
+ 
               <button
                 type="submit"
                 disabled={isJoining}
@@ -119,6 +116,6 @@ const JoinMeetingPage: React.FC<JoinMeetingPageProps> = ({ onJoin, initialCode }
       </div>
     </div>
   );
-};
-
-export default JoinMeetingPage;
+ };
+ 
+ export default JoinMeetingPage;
